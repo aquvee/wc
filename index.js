@@ -1,10 +1,7 @@
 class AquveeComponent extends HTMLElement {
     constructor() {
         super();
-        this._initialized = false;  // 初期化フラグ
-        this._format = this.getAttribute('format') || "auto";
-        this._query = this.getAttribute('query');
-        this._aquvee_url = this.getAttribute('aquvee_url');
+        this._initialized = false;
         this._css = `
             .loader {
                 margin: 0 auto;
@@ -61,10 +58,9 @@ class AquveeComponent extends HTMLElement {
         return ['format', 'query', 'aquvee_url'];
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(_, oldValue, newValue) {
         // 属性が変更された場合にのみ実行
         if (oldValue !== newValue) {
-            this[`_${name}`] = newValue;
             if (this._initialized) {  // 初期化後のみ再レンダリング
                 this.render();
             }
@@ -72,14 +68,17 @@ class AquveeComponent extends HTMLElement {
     }
 
     async render() {
-        const format = this.getAttribute('format') || "auto";
+        const format = this.getAttribute('format') || "div";
         const query = this.getAttribute('query');
         const aquvee_url = this.getAttribute('aquvee_url');
+        const inner_class = this.getAttribute('inner_class');
         const url = window.location.href;
-        const className = this.getAttribute('inner_class');
 
-        // format または query または aquvee_url が未設定ならレンダリングしない
-        if (!format || !query || !aquvee_url) return;
+        // query または aquvee_url が未設定ならエラー表示
+        if (!query || !aquvee_url) {
+            this.innerHTML = `<div class="aquvee error">Error you should set query and aquvee_url</div>`;
+            return;
+        }
 
         // ローディング状態の表示
         this.innerHTML = `<style>${this._css}</style><div class="aquvee"><div class="loader"></div></div>`;
@@ -95,7 +94,7 @@ class AquveeComponent extends HTMLElement {
             const data = await response.json();
             
             // ここで取得したデータを表示
-            this.innerHTML = `<div class="aquvee${className !== null ? ' '+ className: ''}">${data.content}</div>`;
+            this.innerHTML = `<div class="aquvee${inner_class !== null ? ' ' + inner_class : ''}">${data.content}</div>`;
         } catch (error) {
             console.error('Data fetch error:', error);
             this.innerHTML = `<div class="aquvee error">Error fetching data</div>`;
