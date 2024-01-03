@@ -76,7 +76,7 @@ class AquveeComponent extends HTMLElement {
         const query = this.getAttribute('query');
         const aquvee_url = this.getAttribute('aquvee_url');
         const url = window.location.href;
-        const className = this.getAttribute('innerClass');
+        const className = this.getAttribute('inner_class');
 
         // format または query または aquvee_url が未設定ならレンダリングしない
         if (!format || !query || !aquvee_url) return;

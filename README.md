@@ -19,7 +19,7 @@ Start by adding the required script to your HTML file. Place the script tag just
 To incorporate the `aquvee-component` into your webpage, insert it within the `<body>` section. Below is an illustrative example:
 
 ```html
-<aquvee-component innerClass="classForStyling"
+<aquvee-component inner_class="classForStyling"
     format="table"
     query="Please tell me five pieces of user information"
     aquvee_url="http://localhost:8000/wc" />
@@ -27,7 +27,7 @@ To incorporate the `aquvee-component` into your webpage, insert it within the `<
 
 ##### Attributes
 
-- `innerClass`: Assign a CSS class for styling the component. Replace `"classForStyling"` with your preferred class name.
+- `inner_class`: Assign a CSS class for styling the component. Replace `"classForStyling"` with your preferred class name.
 
 - `format`: Specify the output format. It can be a predefined keyword like `"table"` or a custom HTML structure, e.g., `<div class="card-wrapper"><div class="card"></div></div>`. This flexibility allows for varied display styles.
 
@@ -44,7 +44,7 @@ Here's the complete setup showcasing how to embed the `aquvee-component` in an H
 <html>
 <head></head>
 <body>
-    <aquvee-component innerClass="classForStyling"
+    <aquvee-component inner_class="classForStyling"
         format="table"
         query="Please tell me five pieces of user information"
         aquvee_url="http://localhost:8000/wc" />
