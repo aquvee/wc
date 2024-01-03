@@ -1,0 +1,107 @@
+class AIComponent extends HTMLElement {
+    constructor() {
+        super();
+        this._initialized = false;  // 初期化フラグ
+        this._format = this.getAttribute('format') || "auto";
+        this._query = this.getAttribute('query');
+        this._css = `
+            .loader {
+                margin: 0 auto;
+                width: 50px;
+                aspect-ratio: 1;
+                display: grid;
+            }
+            .loader::before,
+            .loader::after {    
+                content:"";
+                grid-area: 1/1;
+                --c:no-repeat radial-gradient(farthest-side,#25b09b 92%,#0000);
+                background: 
+                    var(--c) 50%  0, 
+                    var(--c) 50%  100%, 
+                    var(--c) 100% 50%, 
+                    var(--c) 0    50%;
+                background-size: 12px 12px;
+                animation: l12 1s infinite;
+            }
+            .loader::before {
+                margin: 4px;
+                filter: hue-rotate(45deg);
+                background-size: 8px 8px;
+                animation-timing-function: linear
+            }
+            @keyframes l12 { 
+                100%{transform: rotate(.5turn)}
+            }
+        `;
+    }
+
+    initIntersectionObserver() {
+        const observer = new IntersectionObserver((entries, observer) => {
+            // 要素が画面内に入った場合にのみfetchを実行
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this._initialized) {
+                    this.render();
+                    this._initialized = true;  // 初期化完了
+                    observer.unobserve(this); // 以降は観察しない
+                }
+            });
+        }, { threshold: 0.1 }); // 要素が10%画面に入った時に発火
+
+        observer.observe(this); // 要素の観察を開始
+    }
+
+    connectedCallback() {
+        // Intersection Observerの設定と初期化
+        this.initIntersectionObserver();
+    }
+
+    static get observedAttributes() {
+        return ['format', 'query'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        // 属性が変更された場合にのみ実行
+        if (oldValue !== newValue) {
+            this[`_${name}`] = newValue;
+            if (this._initialized) {  // 初期化後のみ再レンダリング
+                this.render();
+            }
+        }
+    }
+
+    async render() {
+        const format = this.getAttribute('format') || "auto";
+        const query = this.getAttribute('query');
+        const url = window.location.href;
+        const className = this.getAttribute('innerClass');
+
+        // format または query が未設定ならレンダリングしない
+        if (!format || !query) return;
+
+        // ローディング状態の表示
+        this.innerHTML = `<style>${this._css}</style><div><div class="loader"></div></div>`;
+
+        try {
+            const response = await fetch('http://localhost:8000/ai-component', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ format, query, url })
+            });
+            const data = await response.json();
+            
+            // ここで取得したデータを表示
+            this.innerHTML = `<div class="ai-component${className !== null ? ' '+ className: ''}">${data.content}</div>`;
+        } catch (error) {
+            console.error('Data fetch error:', error);
+            this.innerHTML = `<div class="error">Error fetching data</div>`;
+        }
+    }
+}
+
+// カスタムエレメントとして登録
+if (!customElements.get("ai-component")) {
+    customElements.define("ai-component", AIComponent);
+}
