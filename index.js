@@ -1,9 +1,10 @@
-class AIComponent extends HTMLElement {
+class AquveeComponent extends HTMLElement {
     constructor() {
         super();
         this._initialized = false;  // 初期化フラグ
         this._format = this.getAttribute('format') || "auto";
         this._query = this.getAttribute('query');
+        this._aquvee_url = this.getAttribute('aquvee_url');
         this._css = `
             .loader {
                 margin: 0 auto;
@@ -57,7 +58,7 @@ class AIComponent extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['format', 'query'];
+        return ['format', 'query', 'aquvee_url'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -73,17 +74,18 @@ class AIComponent extends HTMLElement {
     async render() {
         const format = this.getAttribute('format') || "auto";
         const query = this.getAttribute('query');
+        const aquvee_url = this.getAttribute('aquvee_url');
         const url = window.location.href;
         const className = this.getAttribute('innerClass');
 
-        // format または query が未設定ならレンダリングしない
-        if (!format || !query) return;
+        // format または query または aquvee_url が未設定ならレンダリングしない
+        if (!format || !query || !aquvee_url) return;
 
         // ローディング状態の表示
-        this.innerHTML = `<style>${this._css}</style><div><div class="loader"></div></div>`;
+        this.innerHTML = `<style>${this._css}</style><div class="aquvee"><div class="loader"></div></div>`;
 
         try {
-            const response = await fetch('http://localhost:8000/ai-component', {
+            const response = await fetch(aquvee_url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -93,15 +95,15 @@ class AIComponent extends HTMLElement {
             const data = await response.json();
             
             // ここで取得したデータを表示
-            this.innerHTML = `<div class="ai-component${className !== null ? ' '+ className: ''}">${data.content}</div>`;
+            this.innerHTML = `<div class="aquvee${className !== null ? ' '+ className: ''}">${data.content}</div>`;
         } catch (error) {
             console.error('Data fetch error:', error);
-            this.innerHTML = `<div class="error">Error fetching data</div>`;
+            this.innerHTML = `<div class="aquvee error">Error fetching data</div>`;
         }
     }
 }
 
 // カスタムエレメントとして登録
-if (!customElements.get("ai-component")) {
-    customElements.define("ai-component", AIComponent);
+if (!customElements.get("aquvee")) {
+    customElements.define("aquvee", AquveeComponent);
 }
