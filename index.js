@@ -104,6 +104,6 @@ class AquveeComponent extends HTMLElement {
 }
 
 // カスタムエレメントとして登録
-if (!customElements.get("aquvee")) {
-    customElements.define("aquvee", AquveeComponent);
+if (!customElements.get("aquvee-component")) {
+    customElements.define("aquvee-component", AquveeComponent);
 }
