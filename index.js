@@ -2,6 +2,7 @@ class AquveeComponent extends HTMLElement {
     constructor() {
         super();
         this._initialized = false;
+        this._observer = null;
         this._css = `
             .loader {
                 margin: 0 auto;
@@ -35,7 +36,8 @@ class AquveeComponent extends HTMLElement {
     }
 
     initIntersectionObserver() {
-        const observer = new IntersectionObserver((entries, observer) => {
+        if(this._observer) return;
+        this._observer = new IntersectionObserver((entries, observer) => {
             // 要素が画面内に入った場合にのみfetchを実行
             entries.forEach(entry => {
                 if (entry.isIntersecting && !this._initialized) {
@@ -46,7 +48,7 @@ class AquveeComponent extends HTMLElement {
             });
         }, { threshold: 0.1 }); // 要素が10%画面に入った時に発火
 
-        observer.observe(this); // 要素の観察を開始
+        this._observer.observe(this); // 要素の観察を開始
     }
 
     connectedCallback() {
