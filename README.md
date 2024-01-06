@@ -47,7 +47,7 @@ Here's the complete setup showcasing how to embed the `aquvee-component` in an H
     <aquvee-component inner_class="classForStyling"
         format="table"
         query="Please tell me five pieces of user information"
-        aquvee_url="http://localhost:8000/wc" />
+        aquvee_url="http://localhost:8000/wc"></aquvee-component>
     <script src="https://cdn.jsdelivr.net/gh/aquvee/wc@latest/index.js"></script>
 </body>
 </html>
