@@ -60,13 +60,13 @@ class AquveeComponent extends HTMLElement {
         this._observer = null;
         this._format = null;
         // シャドウルートを作成
-        this.shadowRoot = this.attachShadow({mode: 'open'});
+        const shadowRoot = this.attachShadow({mode: 'open'});
         // スタイルの設定
-        addDefaultStyle(this.shadowRoot);
-        this.customStyleTag = addCustomStyleTag(this.shadowRoot);
+        addDefaultStyle(shadowRoot);
+        this.customStyleTag = addCustomStyleTag(shadowRoot);
         // コンテンツ用のコンテナを作成
         this.contentContainer = document.createElement('div');
-        this.shadowRoot.appendChild(this.contentContainer);
+        shadowRoot.appendChild(this.contentContainer);
     }
 
     /**
