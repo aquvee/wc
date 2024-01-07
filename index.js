@@ -33,6 +33,14 @@ class AquveeComponent extends HTMLElement {
                 100%{transform: rotate(.5turn)}
             }
         `;
+        this._format = (()=>{
+            const innerHTMLContent = this.innerHTML.trim();
+            if (innerHTMLContent) {
+                return innerHTMLContent; 
+            } else {
+                return "div"; 
+            }
+        })();
     }
 
     initIntersectionObserver() {
@@ -57,7 +65,7 @@ class AquveeComponent extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ['format', 'query', 'aquvee_url'];
+        return ['query', 'aquvee_url'];
     }
 
     attributeChangedCallback(_, oldValue, newValue) {
@@ -70,15 +78,14 @@ class AquveeComponent extends HTMLElement {
     }
 
     async render() {
-        const format = this.getAttribute('format') || "div";
+        const format = this._format
         const query = this.getAttribute('query');
         const aquvee_url = this.getAttribute('aquvee_url');
-        const inner_class = this.getAttribute('inner_class');
         const url = window.location.href;
 
         // query または aquvee_url が未設定ならエラー表示
         if (!query || !aquvee_url) {
-            this.innerHTML = `<div class="aquvee error">Error you should set query and aquvee_url</div>`;
+            this.innerHTML = "Error you should set query and aquvee_url";
             return;
         }
 
@@ -96,10 +103,10 @@ class AquveeComponent extends HTMLElement {
             const data = await response.json();
             
             // ここで取得したデータを表示
-            this.innerHTML = `<div class="aquvee${inner_class !== null ? ' ' + inner_class : ''}">${data.content}</div>`;
+            this.innerHTML = data.content;
         } catch (error) {
             console.error('Data fetch error:', error);
-            this.innerHTML = `<div class="aquvee error">Error fetching data</div>`;
+            this.innerHTML = "Error fetching data";
         }
     }
 }

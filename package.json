@@ -1,6 +1,6 @@
 {
   "name": "@aquvee/wc",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Aquvee WebComponent",
   "main": "index.js",
   "repository": {
@@ -11,6 +11,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "solaoi",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "private": true
 }
