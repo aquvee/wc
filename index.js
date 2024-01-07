@@ -96,6 +96,7 @@ class AquveeComponent extends HTMLElement {
     connectedCallback() {
         // formatの設定
         this._format = this.innerHTML.trim() || "div";
+        this.innerHTML = "";
         // style-cssの設定
         const styleCss = this.getAttribute('style-css');
         if (styleCss) {
