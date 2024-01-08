@@ -19,6 +19,9 @@ function addDefaultStyle(shadowRoot) {
 }
 
 const templateStyle = `
+    :host {
+        color: #333333;
+    }
     /* テーブル用スタイル */
     table {
         width: 100%;
