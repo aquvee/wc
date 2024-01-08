@@ -5,6 +5,7 @@
 function addDefaultStyle(shadowRoot) {
     const style = document.createElement('style');
     style.textContent = `
+        /* ローディングインジケーターのスタイル */
         .loader {
             width: 32px;
             height: 32px;
@@ -12,6 +13,10 @@ function addDefaultStyle(shadowRoot) {
             background-repeat: no-repeat;
             background-position: center;
             margin: 0 auto;
+        }
+        /* 初期子要素を非表示にするスタイル */
+        :host > * {
+            display: none;
         }
     `;
     shadowRoot.appendChild(style);
@@ -81,6 +86,8 @@ class AquveeComponent extends HTMLElement {
         if (styleCss) {
             this.customStyleTag.textContent = styleCss;
         }
+        // 子要素を表示するためにスタイルを変更
+        this.style.display = 'block';
         // Intersection Observerの設定と初期化
         this.initIntersectionObserver();
     }
