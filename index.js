@@ -235,7 +235,7 @@ class AquveeComponent extends HTMLElement {
             });
             const data = await response.json();
             // 取得したデータを表示
-            this.displayContent(data.content);
+            this.displayContent(data.content, data.isChart);
         } catch (error) {
             console.error('Data fetch error:', error);
             this.displayError("Error fetching data");
@@ -256,10 +256,24 @@ class AquveeComponent extends HTMLElement {
      * サーバーから取得したコンテンツを表示する。
      * @param {string} content - 表示するHTMLまたはテキストコンテンツ。
      */
-    displayContent(content) {
+    async displayContent(content, isChart) {
         const container = document.createElement('div');
-        container.innerHTML = content;
-        this.updateDOM(container);
+        if (isChart) {
+            await this.loadGoogleChartsLibrary();
+            const chart = document.createElement('div');
+            chart.id = 'chart';
+            container.appendChild(chart);
+            this.updateDOM(container);
+
+            const drawChartFunction = new Function('shadowRoot', content);
+            const shadowRoot = this.shadowRoot;
+            google.charts.setOnLoadCallback(() => {
+                drawChartFunction(shadowRoot);
+            });
+        } else {
+            container.innerHTML = content;
+            this.updateDOM(container);
+        }
     }
 
     /**
@@ -284,6 +298,26 @@ class AquveeComponent extends HTMLElement {
         // コンテンツコンテナのみをクリアして更新
         this.contentContainer.innerHTML = '';
         this.contentContainer.appendChild(fragment);
+    }
+
+    // Google Chartライブラリのロードを行うメソッド
+    loadGoogleChartsLibrary() {
+        return new Promise((resolve, reject) => {
+            // Google Chartsライブラリがすでにロードされているか確認
+            if (window.google && google.charts) {
+                resolve();
+            } else {
+                // ライブラリがまだロードされていない場合のみロードする
+                const script = document.createElement('script');
+                script.src = 'https://www.gstatic.com/charts/loader.js';
+                script.onload = () => {
+                    google.charts.load('current', {'packages':['corechart']});
+                    google.charts.setOnLoadCallback(resolve);
+                };
+                script.onerror = () => reject(new Error('Failed to load Google Charts'));
+                document.head.appendChild(script);
+            }
+        });
     }
 }
 
