@@ -18,12 +18,56 @@ function addDefaultStyle(shadowRoot) {
     shadowRoot.appendChild(style);
 }
 
+const templateStyle = `
+    table {
+        width: 100%;
+        border-collapse:separate;
+        border-spacing: 0;
+    }
+    table th:first-child{
+        border-radius: 5px 0 0 0;
+    }
+    table th:last-child{
+        border-radius: 0 5px 0 0;
+        border-right: 1px solid #3c6690;
+    }
+    table th{
+        text-align: center;
+        color:white;
+        background: linear-gradient(#829ebc,#225588);
+        border-left: 1px solid #3c6690;
+        border-top: 1px solid #3c6690;
+        border-bottom: 1px solid #3c6690;
+        box-shadow: 0px 1px 1px rgba(255,255,255,0.3) inset;
+        width: 25%;
+        padding: 10px 0;
+    }
+    table td{
+        text-align: center;
+        border-left: 1px solid #a8b7c5;
+        border-bottom: 1px solid #a8b7c5;
+        border-top:none;
+        box-shadow: 0px -3px 5px 1px #eee inset;
+        width: 25%;
+        padding: 10px 0;
+    }
+    table td:last-child{
+        border-right: 1px solid #a8b7c5;
+    }
+    table tr:last-child td:first-child {
+        border-radius: 0 0 0 5px;
+    }
+    table tr:last-child td:last-child {
+        border-radius: 0 0 5px 0;
+    }
+`;
+
 /**
  * カスタムスタイルタグをシャドウDOMに追加し、将来の更新のために参照を保持する。
  * @param {ShadowRoot} shadowRoot - このコンポーネントのシャドウルート。
  * @returns {HTMLStyleElement} - 追加されたカスタムスタイルタグ。
  */
-function addCustomStyleTag(shadowRoot) {
+function addStyleTag(shadowRoot) {
     const customStyleTag = document.createElement('style');
     shadowRoot.appendChild(customStyleTag);
     return customStyleTag;
@@ -43,7 +87,8 @@ class AquveeComponent extends HTMLElement {
         const shadowRoot = this.attachShadow({mode: 'open'});
         // スタイルの設定
         addDefaultStyle(shadowRoot);
-        this.customStyleTag = addCustomStyleTag(shadowRoot);
+        this.templateStyleTag = addStyleTag(shadowRoot);
+        this.customStyleTag = addStyleTag(shadowRoot);
         // コンテンツ用のコンテナを作成
         this.contentContainer = document.createElement('div');
         shadowRoot.appendChild(this.contentContainer);
@@ -83,6 +128,10 @@ class AquveeComponent extends HTMLElement {
         if (styleCss) {
             this.customStyleTag.textContent = styleCss;
         }
+        const resetCss = this.hasAttribute('reset-css');
+        if(!resetCss) {
+            this.templateStyleTag.textContent = templateStyle;
+        }
         // 初期化完了後に表示
         this.style.display = 'block';
         // Intersection Observerの設定と初期化
@@ -106,6 +155,14 @@ class AquveeComponent extends HTMLElement {
     attributeChangedCallback(name, _, newValue) {
         if (name === 'style-css') {
             this.customStyleTag.textContent = newValue;
+        } else if (name === 'rest-css') {
+            if (newValue === null) {
+                // 属性が削除されたときの処理
+                this.customStyleTag.textContent = templateStyle;
+            } else {
+                // 属性が追加または変更されたときの処理
+                this.customStyleTag.textContent = "";
+            }
         } else if (this._initialized) {
             // style-css以外の属性が変更された場合にのみ再レンダリング
             this.render();
