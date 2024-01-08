@@ -22,77 +22,61 @@ const templateStyle = `
     /* テーブル用スタイル */
     table {
         width: 100%;
-        border-collapse:separate;
+        border-collapse: separate;
         border-spacing: 0;
+        margin: 0 auto;
     }
-    table th:first-child{
-        border-radius: 5px 0 0 0;
-    }
-    table th:last-child{
-        border-radius: 0 5px 0 0;
-        border-right: 1px solid #3c6690;
-    }
-    table th{
+    table th, table td {
+        padding: 10px 15px;
+        border: 1px solid #8b9ba9;
         text-align: center;
-        color:white;
-        background: linear-gradient(#829ebc,#225588);
-        border-left: 1px solid #3c6690;
-        border-top: 1px solid #3c6690;
-        border-bottom: 1px solid #3c6690;
-        box-shadow: 0px 1px 1px rgba(255,255,255,0.3) inset;
-        width: 25%;
-        padding: 10px 0;
+        background-color: #f2f2f2;
     }
-    table td{
-        text-align: center;
-        border-left: 1px solid #a8b7c5;
-        border-bottom: 1px solid #a8b7c5;
-        border-top:none;
-        box-shadow: 0px -3px 5px 1px #eee inset;
-        width: 25%;
-        padding: 10px 0;
+    table th {
+        background: #225588;
+        color: white;
+        font-weight: bold;
     }
-    table td:last-child{
-        border-right: 1px solid #a8b7c5;
+    table th:first-child {
+        border-top-left-radius: 5px;
+    }
+    table th:last-child {
+        border-top-right-radius: 5px;
     }
     table tr:last-child td:first-child {
-        border-radius: 0 0 0 5px;
+        border-bottom-left-radius: 5px;
     }
     table tr:last-child td:last-child {
-        border-radius: 0 0 5px 0;
+        border-bottom-right-radius: 5px;
+    }
+    table tr:nth-child(odd) td {
+        background-color: #f9f9f9;
+    }
+    table tr:nth-child(even) td {
+        background-color: #ffffff;
     }
     /* リスト用スタイル */
     ul, ol {
         list-style: none;
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
+        padding-left: 0;
     }
     li {
         padding: 8px 16px;
-        border-bottom: 1px solid #a8b7c5;
-        box-shadow: 0px -3px 5px 1px #eee inset;
-        color: #333;
+        border-bottom: 1px solid #8b9ba9;
+        background-color: #f9f9f9;
+    }
+    li:nth-child(even) {
+        background-color: #e9e9e9;
     }
     ul li:before {
         content: "•";
         color: #225588;
-        display: inline-block;
-        width: 1em;
-        margin-left: -1em;
-    }
-    ol {
-        counter-reset: item;
-    }
-    ol li {
-        counter-increment: item;
+        padding-right: 5px;
     }
     ol li:before {
         content: counter(item) ".";
         color: #225588;
-        display: inline-block;
-        width: 1em;
-        margin-left: -1em;
+        padding-right: 5px;
     }
 `;
 

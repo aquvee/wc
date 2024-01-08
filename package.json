@@ -1,6 +1,6 @@
 {
   "name": "@aquvee/wc",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Aquvee WebComponent",
   "main": "index.js",
   "repository": {
