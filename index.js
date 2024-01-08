@@ -19,6 +19,7 @@ function addDefaultStyle(shadowRoot) {
 }
 
 const templateStyle = `
+    /* テーブル用スタイル */
     table {
         width: 100%;
         border-collapse:separate;
@@ -59,6 +60,39 @@ const templateStyle = `
     }
     table tr:last-child td:last-child {
         border-radius: 0 0 5px 0;
+    }
+    /* リスト用スタイル */
+    ul, ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    li {
+        padding: 8px 16px;
+        border-bottom: 1px solid #a8b7c5;
+        box-shadow: 0px -3px 5px 1px #eee inset;
+        color: #333;
+    }
+    ul li:before {
+        content: "•";
+        color: #225588;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+    ol {
+        counter-reset: item;
+    }
+    ol li {
+        counter-increment: item;
+    }
+    ol li:before {
+        content: counter(item) ".";
+        color: #225588;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
     }
 `;
 
